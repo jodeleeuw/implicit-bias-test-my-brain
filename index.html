@@ -10,40 +10,24 @@
     <script src="generate-stimuli.js"></script>
     <link rel="stylesheet" href="jspsych/css/jspsych.css">
     <style>
-      img.cue {
-        cursor: pointer;
-        border: 0px solid #aaa;
-        border-radius: 10px;
-        padding: 15px;
-        margin: 0px;
-        box-shadow: 0px 0px 5px 2px #ddd;
-        outline: none;
-      }
 
       svg {
         border: 0px solid #aaa;
         border-radius: 10px;
         padding: 15px;
-        margin: 0px;
+        margin: 0px 0px 20px 0px;
         box-shadow: 0px 0px 5px 2px #ddd;
         outline: none;
       }
 
-      img.mini {
-        transform: scale(0.8)
+      div.test-image {
+        margin: 15px;
+        cursor: pointer;
       }
 
       #jspsych-html-button-response-btngroup {
         width: 280px;
         margin: auto;
-      }
-
-      img.feedback {
-        width: 190px;
-      }
-
-      img.gs {
-        filter: grayscale(100%);
       }
 
       div.instructions {
@@ -63,19 +47,233 @@
   </body>
   <script>
 
+    var training_phase_trials_per_block = 40;
+    var training_phase_block_1_prob_dist = 0.8;
+    var training_phase_block_2_prob_dist = 0.5;
+
+    var training_phase_block_1_shapes = jsPsych.randomization.shuffle(['circle', 'triangle']);
+    var training_phase_block_2_shapes = jsPsych.randomization.shuffle(['square', 'star']);
+
     var timeline = [];
 
+    /* define task instructions */
+
+    var instructions_pre_training = {
+      type: 'html-button-response',
+      stimulus: '<div class="instructions">'+
+        '<p>Training instructions placeholder.</p>'+
+        '</div>',
+      choices: ['Start'],
+      data: {task: 'instructions'}
+    }
+
+    var instructions_pre_test = {
+      type: 'html-button-response',
+      stimulus: '<div class="instructions">'+
+        '<p>Test instructions placeholder.</p>'+
+        '</div>',
+      choices: ['Start'],
+      data: {task: 'instructions'}
+    }
+
+    var instructions_completed = {
+      type: 'html-button-response',
+      stimulus: '<div class="instructions">'+
+        '<p>Completed placeholder.</p>'+
+        '</div>',
+      choices: ['Done'],
+      data: {task: 'instructions'}
+    }
+    
     /* create training procedure */
 
     var training_cue = {
       type: 'html-button-response',
       choices: ["1", "2", "3", "4"],
-      stimulus: "<p>Test</p>"
+      stimulus: function(){
+        var num_shapes = jsPsych.randomization.sampleWithoutReplacement([1,2,3,4], 1)[0];
+        var color = jsPsych.randomization.sampleWithoutReplacement(["#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#073b4c"], 1)[0];
+        var size = jsPsych.randomization.sampleWithoutReplacement([30,40,50,60], 1)[0];
+        var stim = generate_stimulus(jsPsych.timelineVariable('shape', true), num_shapes, color, size);
+        return stim.node.outerHTML;
+      },
+      post_trial_gap: 1000,
+      response_ends_trial: false,
+      trial_duration: 2000,
+      data: {
+        task: 'number-identification'
+      }
     }
 
-    var stim = generate_stimulus('star', 4, "#f00", 40);
+    var training_word = {
+      type: 'html-keyboard-response',
+      stimulus: function(){
+        return "<p>" + jsPsych.timelineVariable('word', true) + "</p>"
+      },
+      post_trial_gap: 1000,
+      choices: jsPsych.NO_KEYS,
+      trial_duration: 2000
+    }
 
-    stim.addTo('body')
+    var training_phase_block_1 = {
+      timeline: [training_cue, training_word],
+      timeline_variables: [
+        {shape: training_phase_block_1_shapes[0], word: 'NEGATIVE'},
+        {shape: training_phase_block_1_shapes[0], word: 'NEGATIVE'},
+        {shape: training_phase_block_1_shapes[0], word: 'NEGATIVE'},
+        {shape: training_phase_block_1_shapes[0], word: 'NEGATIVE'},
+        {shape: training_phase_block_1_shapes[0], word: 'NEGATIVE'},
+        {shape: training_phase_block_1_shapes[0], word: 'NEGATIVE'},
+        {shape: training_phase_block_1_shapes[0], word: 'NEGATIVE'},
+        {shape: training_phase_block_1_shapes[0], word: 'NEGATIVE'},
+        {shape: training_phase_block_1_shapes[0], word: 'NEGATIVE'},
+        {shape: training_phase_block_1_shapes[0], word: 'NEGATIVE'},
+        {shape: training_phase_block_1_shapes[0], word: 'NEGATIVE'},
+        {shape: training_phase_block_1_shapes[0], word: 'NEGATIVE'},
+        {shape: training_phase_block_1_shapes[0], word: 'NEGATIVE'},
+        {shape: training_phase_block_1_shapes[0], word: 'NEGATIVE'},
+        {shape: training_phase_block_1_shapes[0], word: 'NEGATIVE'},
+        {shape: training_phase_block_1_shapes[0], word: 'NEGATIVE'},
+        {shape: training_phase_block_1_shapes[0], word: 'POSITIVE'},
+        {shape: training_phase_block_1_shapes[0], word: 'POSITIVE'},
+        {shape: training_phase_block_1_shapes[0], word: 'POSITIVE'},
+        {shape: training_phase_block_1_shapes[0], word: 'POSITIVE'},
+      
+        {shape: training_phase_block_1_shapes[1], word: 'NEGATIVE'},
+        {shape: training_phase_block_1_shapes[1], word: 'NEGATIVE'},
+        {shape: training_phase_block_1_shapes[1], word: 'NEGATIVE'},
+        {shape: training_phase_block_1_shapes[1], word: 'NEGATIVE'},
+        {shape: training_phase_block_1_shapes[1], word: 'POSITIVE'},
+        {shape: training_phase_block_1_shapes[1], word: 'POSITIVE'},
+        {shape: training_phase_block_1_shapes[1], word: 'POSITIVE'},
+        {shape: training_phase_block_1_shapes[1], word: 'POSITIVE'},
+        {shape: training_phase_block_1_shapes[1], word: 'POSITIVE'},
+        {shape: training_phase_block_1_shapes[1], word: 'POSITIVE'},
+        {shape: training_phase_block_1_shapes[1], word: 'POSITIVE'},
+        {shape: training_phase_block_1_shapes[1], word: 'POSITIVE'},
+        {shape: training_phase_block_1_shapes[1], word: 'POSITIVE'},
+        {shape: training_phase_block_1_shapes[1], word: 'POSITIVE'},
+        {shape: training_phase_block_1_shapes[1], word: 'POSITIVE'},
+        {shape: training_phase_block_1_shapes[1], word: 'POSITIVE'},
+        {shape: training_phase_block_1_shapes[1], word: 'POSITIVE'},
+        {shape: training_phase_block_1_shapes[1], word: 'POSITIVE'},
+        {shape: training_phase_block_1_shapes[1], word: 'POSITIVE'},
+        {shape: training_phase_block_1_shapes[1], word: 'POSITIVE'}
+      ],
+      randomize_order: true,
+      data: {
+        phase: 'block-1'
+      }
+    }
+
+    var training_phase_block_2 = {
+      timeline: [training_cue, training_word],
+      timeline_variables: [
+        {shape: training_phase_block_2_shapes[0], word: 'NEGATIVE'},
+        {shape: training_phase_block_2_shapes[0], word: 'NEGATIVE'},
+        {shape: training_phase_block_2_shapes[0], word: 'NEGATIVE'},
+        {shape: training_phase_block_2_shapes[0], word: 'NEGATIVE'},
+        {shape: training_phase_block_2_shapes[0], word: 'NEGATIVE'},
+        {shape: training_phase_block_2_shapes[0], word: 'NEGATIVE'},
+        {shape: training_phase_block_2_shapes[0], word: 'NEGATIVE'},
+        {shape: training_phase_block_2_shapes[0], word: 'NEGATIVE'},
+        {shape: training_phase_block_2_shapes[0], word: 'NEGATIVE'},
+        {shape: training_phase_block_2_shapes[0], word: 'NEGATIVE'},
+        {shape: training_phase_block_2_shapes[0], word: 'POSITIVE'},
+        {shape: training_phase_block_2_shapes[0], word: 'POSITIVE'},
+        {shape: training_phase_block_2_shapes[0], word: 'POSITIVE'},
+        {shape: training_phase_block_2_shapes[0], word: 'POSITIVE'},
+        {shape: training_phase_block_2_shapes[0], word: 'POSITIVE'},
+        {shape: training_phase_block_2_shapes[0], word: 'POSITIVE'},
+        {shape: training_phase_block_2_shapes[0], word: 'POSITIVE'},
+        {shape: training_phase_block_2_shapes[0], word: 'POSITIVE'},
+        {shape: training_phase_block_2_shapes[0], word: 'POSITIVE'},
+        {shape: training_phase_block_2_shapes[0], word: 'POSITIVE'},
+      
+        {shape: training_phase_block_2_shapes[1], word: 'NEGATIVE'},
+        {shape: training_phase_block_2_shapes[1], word: 'NEGATIVE'},
+        {shape: training_phase_block_2_shapes[1], word: 'NEGATIVE'},
+        {shape: training_phase_block_2_shapes[1], word: 'NEGATIVE'},
+        {shape: training_phase_block_2_shapes[1], word: 'NEGATIVE'},
+        {shape: training_phase_block_2_shapes[1], word: 'NEGATIVE'},
+        {shape: training_phase_block_2_shapes[1], word: 'NEGATIVE'},
+        {shape: training_phase_block_2_shapes[1], word: 'NEGATIVE'},
+        {shape: training_phase_block_2_shapes[1], word: 'NEGATIVE'},
+        {shape: training_phase_block_2_shapes[1], word: 'NEGATIVE'},
+        {shape: training_phase_block_2_shapes[1], word: 'POSITIVE'},
+        {shape: training_phase_block_2_shapes[1], word: 'POSITIVE'},
+        {shape: training_phase_block_2_shapes[1], word: 'POSITIVE'},
+        {shape: training_phase_block_2_shapes[1], word: 'POSITIVE'},
+        {shape: training_phase_block_2_shapes[1], word: 'POSITIVE'},
+        {shape: training_phase_block_2_shapes[1], word: 'POSITIVE'},
+        {shape: training_phase_block_2_shapes[1], word: 'POSITIVE'},
+        {shape: training_phase_block_2_shapes[1], word: 'POSITIVE'},
+        {shape: training_phase_block_2_shapes[1], word: 'POSITIVE'},
+        {shape: training_phase_block_2_shapes[1], word: 'POSITIVE'}
+      ],
+      randomize_order: true,
+      data: {
+        phase: 'block-2'
+      }
+    }
+
+    /* test phase */
+
+    var test_trial = {
+      type: 'html-button-response',
+      stimulus: '<p>Which image do you prefer?</p>',
+      choices: function(){
+        var arr = [];
+        
+        var num_shapes = jsPsych.randomization.sampleWithReplacement([1,2,3,4], 2);
+        var color = jsPsych.randomization.sampleWithReplacement(["#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#073b4c"], 2);
+        var size = jsPsych.randomization.sampleWithReplacement([30,40,50,60], 2);
+        var stim_a = generate_stimulus(jsPsych.timelineVariable('shape_a', true), num_shapes[0], color[0], size[0]);
+        var stim_b = generate_stimulus(jsPsych.timelineVariable('shape_b', true), num_shapes[1], color[1], size[1]);
+        
+        return [stim_a.node.outerHTML, stim_b.node.outerHTML]
+      },
+      button_html: '<div class="test-image">%choice%</div>',
+      trial_duration: 2000,
+      post_trial_gap: 1000,
+      data: {
+        task: 'preference'
+      }
+    }
+
+    var test_phase = {
+      timeline: [test_trial],
+      timeline_variables: [
+        {shape_a: training_phase_block_1_shapes[0], shape_b: training_phase_block_2_shapes[0]},
+        {shape_a: training_phase_block_2_shapes[0], shape_b: training_phase_block_1_shapes[0]},
+        {shape_a: training_phase_block_1_shapes[1], shape_b: training_phase_block_2_shapes[1]},
+        {shape_a: training_phase_block_2_shapes[1], shape_b: training_phase_block_1_shapes[1]}
+      ],
+      sample: {
+        type: 'fixed-repetitions',
+        size: 10
+      },
+      data: {
+        phase: 'test'
+      }
+    }
+
+    /* assemble timeline */
+
+    timeline.push(instructions_pre_training);
+    timeline.push(training_phase_block_1);
+    timeline.push(training_phase_block_2);
+    timeline.push(instructions_pre_test);
+    timeline.push(test_phase);
+    timeline.push(instructions_completed);
+    
+    jsPsych.init({
+      timeline: timeline
+    });
+    
+    //var stim = generate_stimulus('star', 4, "#f00", 40);
+
+    //stim.addTo('body')
 
 
   </script>
