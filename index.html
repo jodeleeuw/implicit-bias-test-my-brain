@@ -6,10 +6,21 @@
     <script src="jspsych/plugins/jspsych-html-button-response.js"></script>
     <script src="jspsych/plugins/jspsych-html-keyboard-response.js"></script>
     <script src="jspsych/plugins/jspsych-html-slider-response.js"></script>
+    <script src="svg.js/svg.min.js"></script>
+    <script src="generate-stimuli.js"></script>
     <link rel="stylesheet" href="jspsych/css/jspsych.css">
     <style>
       img.cue {
         cursor: pointer;
+        border: 0px solid #aaa;
+        border-radius: 10px;
+        padding: 15px;
+        margin: 0px;
+        box-shadow: 0px 0px 5px 2px #ddd;
+        outline: none;
+      }
+
+      svg {
         border: 0px solid #aaa;
         border-radius: 10px;
         padding: 15px;
@@ -51,5 +62,21 @@
 
   </body>
   <script>
+
+    var timeline = [];
+
+    /* create training procedure */
+
+    var training_cue = {
+      type: 'html-button-response',
+      choices: ["1", "2", "3", "4"],
+      stimulus: "<p>Test</p>"
+    }
+
+    var stim = generate_stimulus('star', 4, "#f00", 40);
+
+    stim.addTo('body')
+
+
   </script>
 </html>
