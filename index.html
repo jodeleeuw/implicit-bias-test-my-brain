@@ -11,13 +11,20 @@
     <link rel="stylesheet" href="jspsych/css/jspsych.css">
     <style>
 
-      svg {
+      svg, .train-word {
         border: 0px solid #aaa;
         border-radius: 10px;
         padding: 15px;
         margin: 0px 0px 20px 0px;
         box-shadow: 0px 0px 5px 2px #ddd;
         outline: none;
+      }
+
+      .train-word {
+        width: 200px;
+        height: 200px;
+        line-height: 200px;
+        margin: 0px 0px 61.2px 0px;
       }
 
       div.test-image {
@@ -97,7 +104,6 @@
         var stim = generate_stimulus(jsPsych.timelineVariable('shape', true), num_shapes, color, size);
         return stim.node.outerHTML;
       },
-      post_trial_gap: 1000,
       response_ends_trial: false,
       trial_duration: 2000,
       data: {
@@ -108,7 +114,7 @@
     var training_word = {
       type: 'html-keyboard-response',
       stimulus: function(){
-        return "<p>" + jsPsych.timelineVariable('word', true) + "</p>"
+        return "<p class='train-word'>" + jsPsych.timelineVariable('word', true) + "</p>"
       },
       post_trial_gap: 1000,
       choices: jsPsych.NO_KEYS,
