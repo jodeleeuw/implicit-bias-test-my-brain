@@ -233,11 +233,11 @@
       choices: function(){
         var arr = [];
         
-        var num_shapes = jsPsych.randomization.sampleWithReplacement([1,2,3,4], 2);
-        var color = jsPsych.randomization.sampleWithReplacement(["#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#073b4c"], 2);
-        var size = jsPsych.randomization.sampleWithReplacement([30,40,50,60], 2);
+        var num_shapes = jsPsych.randomization.sampleWithReplacement([1,2,3,4], 1);
+        var color = jsPsych.randomization.sampleWithReplacement(["#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#073b4c"], 1);
+        var size = jsPsych.randomization.sampleWithReplacement([30,40,50,60], 1);
         var stim_a = generate_stimulus(jsPsych.timelineVariable('shape_a', true), num_shapes[0], color[0], size[0]);
-        var stim_b = generate_stimulus(jsPsych.timelineVariable('shape_b', true), num_shapes[1], color[1], size[1]);
+        var stim_b = generate_stimulus(jsPsych.timelineVariable('shape_b', true), num_shapes[0], color[0], size[0]);
         
         return [stim_a.node.outerHTML, stim_b.node.outerHTML]
       },
