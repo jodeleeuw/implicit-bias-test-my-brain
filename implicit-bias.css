@@ -1,0 +1,39 @@
+
+      svg, .train-word {
+        border: 0px solid #aaa;
+        border-radius: 10px;
+        padding: 15px;
+        margin: 0px 0px 20px 0px;
+        box-shadow: 0px 0px 5px 2px #ddd;
+        outline: none;
+      }
+
+      .train-word {
+        width: 200px;
+        height: 200px;
+        line-height: 200px;
+        margin: 0px 0px 61.2px 0px;
+        color: #444;
+        font-size: 24px;
+      }
+
+      div.test-image {
+        margin: 15px;
+        cursor: pointer;
+      }
+
+      #jspsych-html-button-response-btngroup {
+        width: 280px;
+        margin: auto;
+      }
+
+      div.instructions {
+        max-width: 800px;
+      }
+
+      @media only screen and (max-width: 600px) {
+        div.instructions {
+          font-size: 14px;
+          line-height: 1.5em;
+        }
+      }
