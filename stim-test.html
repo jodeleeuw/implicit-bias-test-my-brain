@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="jspsych/jspsych.js"></script>
+    <script src="jspsych/plugins/jspsych-html-button-response.js"></script>
+    <script src="jspsych/plugins/jspsych-html-keyboard-response.js"></script>
+    <script src="jspsych/plugins/jspsych-html-slider-response.js"></script>
+    <script src="generate-order.js"></script>
+    <script src="svg.js/svg.min.js"></script>
+    <script src="svg.js/svg.path.js"></script>
+    <script src="generate-stimuli.js"></script>
+    <link rel="stylesheet" href="jspsych/css/jspsych.css">
+    <style>
+
+      svg, .train-word {
+        border: 0px solid #aaa;
+        border-radius: 10px;
+        padding: 15px;
+        margin: 0px 0px 20px 0px;
+        box-shadow: 0px 0px 5px 2px #ddd;
+        outline: none;
+      }
+
+      .train-word {
+        width: 200px;
+        height: 200px;
+        line-height: 200px;
+        margin: 0px 0px 61.2px 0px;
+        color: #444;
+        font-size: 24px;
+      }
+
+      div.test-image {
+        margin: 15px;
+        cursor: pointer;
+      }
+
+      #jspsych-html-button-response-btngroup {
+        width: 280px;
+        margin: auto;
+      }
+
+      div.instructions {
+        max-width: 800px;
+      }
+
+      @media only screen and (max-width: 600px) {
+        div.instructions {
+          font-size: 14px;
+          line-height: 1.5em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+
+  </body>
+  <script>
+
+    var timeline = [];
+
+    /* define task instructions */
+
+    /* create training procedure */
+
+    var num_shapes = null;
+    var color = null;
+    var size = null;
+    var training_cue = {
+      type: 'html-button-response',
+      choices: ["1", "2", "3", "4"],
+      stimulus: function(){
+        num_shapes = jsPsych.randomization.sampleWithoutReplacement([1,2,3,4], 1)[0];
+        color = jsPsych.randomization.sampleWithoutReplacement(["#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#073b4c"], 1)[0];
+        size = jsPsych.randomization.sampleWithoutReplacement([30,40,50,60], 1)[0];
+        var stim = generate_stimulus('cone', num_shapes, color, size);
+        return stim.node.outerHTML;
+      },
+      response_ends_trial: false,
+      trial_duration: 200000,
+      data: {
+        task: 'number-identification',
+        word: jsPsych.timelineVariable('word')
+      },
+      on_finish: function(data){
+        data.num_shapes = num_shapes;
+        data.color = color;
+        data.size = size;
+        data.correct = data.button_pressed + 1 == num_shapes;
+      }
+    }
+
+    timeline.push(training_cue);   
+    
+    jsPsych.init({
+      timeline: timeline
+    });
+
+  </script>
+</html>
