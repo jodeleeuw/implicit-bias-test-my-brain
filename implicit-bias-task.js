@@ -166,10 +166,13 @@
     var save_data = {
       type: 'call-function',
       func: function(){
+        /*
         var results = jsPsych.data.get().ignore("internal_node_id").ignore("stimulus").ignore("key_press").values();
         var score = 0;
         var outcomes = {};
         tmbSubmitToServer(results,score,outcomes);
+        */
+        jsPsych.data.get().ignore("internal_node_id").ignore("stimulus").ignore("key_press").localSave('csv', 'sample-implicit-bias-data.csv');
       }
     }
 
