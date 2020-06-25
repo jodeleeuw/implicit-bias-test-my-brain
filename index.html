@@ -186,11 +186,11 @@
         data.color = color;
         data.size = size;
         
-        if(data.button_pressed === 0){
+        if(data.button_pressed == 0){
           data.shape_val = shape_vals[jsPsych.timelineVariable('shape_a', true)];
         }
 
-        if(data.button_pressed === 1){
+        if(data.button_pressed == 1){
           data.shape_val = shape_vals[jsPsych.timelineVariable('shape_b', true)];
         }
 
