@@ -18,8 +18,12 @@
       }
 
       div.test-image {
-        margin: 15px;
+        margin: 2px;
         cursor: pointer;
+      }
+
+      div.test-image svg {
+        margin: 0px;
       }
 
       #jspsych-html-button-response-btngroup {

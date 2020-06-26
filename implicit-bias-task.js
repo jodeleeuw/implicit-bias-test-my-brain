@@ -191,7 +191,7 @@
         return [stim_a.node.outerHTML, stim_b.node.outerHTML]
       },
       button_html: '<div class="test-image">%choice%</div>',
-      trial_duration: 2000,
+      trial_duration: 2000000,
       post_trial_gap: 1000,
       data: {
         top_shape: jsPsych.timelineVariable('shape_a'),
@@ -252,11 +252,11 @@
 
     /* assemble timeline */
 
-    timeline.push(instructions_pre_training);
+    /*timeline.push(instructions_pre_training);
     timeline.push(practice_phase);
     timeline.push(instructions_post_practice);
     timeline.push(training_phase);
-    timeline.push(instructions_pre_test);
+    timeline.push(instructions_pre_test);*/
     timeline.push(test_phase);
     timeline.push(save_data);
     timeline.push(instructions_completed);
