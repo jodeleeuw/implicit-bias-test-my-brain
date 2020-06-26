@@ -132,26 +132,6 @@ function generate_stimulus(shape, number, color, size){
     }
   }
 
-  if(shape == 'crescent'){
-    for(var i=0; i<number; i++){
-      var x = Math.floor(Math.random()*(stim_width-size));
-      var y = Math.floor(Math.random()*(stim_width-size));
-      while(check_bb_collision(stim_locs, {x,y}, size, padding)){
-        x = Math.floor(Math.random()*(stim_width-size));
-        y = Math.floor(Math.random()*(stim_width-size));
-      }
-      stim_locs.push({x,y})
-
-      //stim.rect(size,size).move(x,y).attr({fill:"#888"})
-      
-      stim.path()
-        .M({x:x+size*1, y:y+size*0})
-        .A(size,size*0.5,0,0,0,{x:x+size*1, y:y+size*1})
-        .A(size,size*0.75,0,0,1,{x:x+size*1, y:y+size*0})
-        .attr({fill:color})
-    }
-  }
-
   if(shape == 'pentagon'){
     for(var i=0; i<number; i++){
       var x = Math.floor(Math.random()*(stim_width-size));
@@ -174,6 +154,26 @@ function generate_stimulus(shape, number, color, size){
         [x+size*.79,y+size*.9],
         [x+size*0.98,y+size*0.35],
       ]).attr({fill:color})
+    }
+  }
+
+  if(shape == 'crescent'){
+    for(var i=0; i<number; i++){
+      var x = Math.floor(Math.random()*(stim_width-size));
+      var y = Math.floor(Math.random()*(stim_width-size));
+      while(check_bb_collision(stim_locs, {x,y}, size, padding)){
+        x = Math.floor(Math.random()*(stim_width-size));
+        y = Math.floor(Math.random()*(stim_width-size));
+      }
+      stim_locs.push({x,y})
+
+      //stim.rect(size,size).move(x,y).attr({fill:"#888"})
+      
+      stim.path()
+        .M({x:x+size*1, y:y+size*0})
+        .A(size,size*0.5,0,0,0,{x:x+size*1, y:y+size*1})
+        .A(size,size*0.75,0,0,1,{x:x+size*1, y:y+size*0})
+        .attr({fill:color})
     }
   }
 

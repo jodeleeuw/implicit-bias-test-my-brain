@@ -14,7 +14,16 @@
       stimulus: '<div class="instructions">'+
         '<p>You will see a set of shapes (for example, squares) on the screen for a brief moment. Press the button corresponding to the number of shapes on the screen. You need to be as quick as possible. You will now do a short practice.</p>'+
         '</div>',
-      choices: ['Start'],
+      choices: ['Start Practice'],
+      data: {task: 'instructions'}
+    }
+
+    var instructions_post_practice = {
+      type: 'html-button-response',
+      stimulus: '<div class="instructions">'+
+        '<p>You have completed the practice. Click the button to begin the task.</p>'+
+        '</div>',
+      choices: ['Start Task'],
       data: {task: 'instructions'}
     }
 
@@ -24,7 +33,7 @@
         '<p>You completed the first part of the task.</p>'+
         '<p>In this part you will see two images on the screen at the same time. Please click on the image that you prefer.</p>'+
         '</div>',
-      choices: ['Start'],
+      choices: ['Start Task'],
       data: {task: 'instructions'}
     }
 
@@ -65,35 +74,100 @@
         data.color = color;
         data.size = size;
         data.responded = data.button_pressed !== null;
-        data.correct = data.responded ? data.button_pressed + 1 == num_shapes : false;
+        data.correct = data.responded ? parseInt(data.button_pressed) + 1 == num_shapes : false;
       }
+    }
+
+    var training_feedback = {
+      type: 'html-keyboard-response',
+      stimulus: function(){
+        var responded = jsPsych.data.get().filter({task: 'number-identification'}).last(1).values()[0].responded;
+        var correct = jsPsych.data.get().filter({task: 'number-identification'}).last(1).values()[0].correct;
+        if(responded){
+          if(correct){
+            return "<p class='train-word'>CORRECT</p>"
+          } else {
+            return "<p class='train-word'>INCORRECT</p>"
+          }
+        } else {
+          return '<p>No response detected. Please try to respond faster in the next trial.</p>'
+        }
+      },
+      post_trial_gap: 1000,
+      choices: jsPsych.NO_KEYS,
+      trial_duration: 1000
     }
 
     var training_word = {
       type: 'html-keyboard-response',
       stimulus: function(){
-        return "<p class='train-word'>" + jsPsych.timelineVariable('word', true) + "</p>"
+        var responded = jsPsych.data.get().filter({task: 'number-identification'}).last(1).values()[0].responded;
+        if(responded){
+          return "<p class='train-word'>" + jsPsych.timelineVariable('word', true) + "</p>"
+        } else {
+          return '<p>No response detected. Please try to respond faster in the next trial.</p>'
+        }
       },
       post_trial_gap: 1000,
       choices: jsPsych.NO_KEYS,
-      trial_duration: 1500
+      trial_duration: 1000
     }
 
-    var speed_nudge = {
+    // var speed_nudge = {
+    //   timeline: [{
+    //     type: 'html-keyboard-response',
+    //     stimulus: '<p>No response detected. Please try to respond faster in the next trial.</p>',
+    //     trial_duration: 2000,
+    //     post_trial_gap: 1000
+    //   }],
+    //   conditional_function: function(){
+    //     var responded = jsPsych.data.get().filter({task: 'number-identification'}).last(1).values()[0].responded;
+    //     return !responded;
+    //   }
+    // }
+
+    /* create practice phase */
+
+    var repeat_practice = {
       timeline: [{
-        type: 'html-keyboard-response',
-        stimulus: '<p>No response detected. Please try to respond faster in the next trial.</p>',
-        trial_duration: 2000,
-        post_trial_gap: 1000
+        type: 'html-button-response',
+        stimulus: '<p>You answered incorrectly or too slowly on one of the practice trials</p><p>Let\'s try the practice again.</p>',
+        choices: ['Start practice']
       }],
       conditional_function: function(){
-        var responded = jsPsych.data.get().filter({task: 'number-identification'}).last(1).values()[0].responded;
-        return !responded;
+        var correct_trials = jsPsych.data.get().filter({phase: 'practice', task: 'number-identification'}).last(2).filter({correct: true}).count();
+        return correct_trials < 2;
+      }
+    }
+
+    var practice_phase = {
+      timeline: [
+        {
+          timeline: [training_cue, training_feedback],
+          timeline_variables: [
+            {shape: positive_shape, word: null, word_type: null},
+            {shape: negative_shape, word: null, word_type: null},
+            {shape: neutral_shape_1, word: null, word_type: null},
+            {shape: neutral_shape_2, word: null, word_type: null}
+          ],
+          sample: {
+            type: 'without-replacement',
+            size: 2
+          }
+        },
+        repeat_practice
+      ],
+      data: {
+        phase: 'practice'
+      },
+      loop_function: function(){
+        var correct_trials = jsPsych.data.get().filter({phase: 'practice', task: 'number-identification'}).last(2).filter({correct: true}).count();
+        return correct_trials < 2;
       }
     }
 
     var training_phase = {
-      timeline: [training_cue, training_word, speed_nudge],
+      timeline: [training_cue, training_word],
       timeline_variables: training_phase_trials, 
       data: {
         phase: 'training'
@@ -179,6 +253,8 @@
     /* assemble timeline */
 
     timeline.push(instructions_pre_training);
+    timeline.push(practice_phase);
+    timeline.push(instructions_post_practice);
     timeline.push(training_phase);
     timeline.push(instructions_pre_test);
     timeline.push(test_phase);
