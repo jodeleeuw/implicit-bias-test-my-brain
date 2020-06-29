@@ -240,23 +240,23 @@
     var save_data = {
       type: 'call-function',
       func: function(){
-        /*
+        
         var results = jsPsych.data.get().ignore("internal_node_id").ignore("stimulus").ignore("key_press").values();
         var score = 0;
         var outcomes = {};
         tmbSubmitToServer(results,score,outcomes);
-        */
-        jsPsych.data.get().ignore("internal_node_id").ignore("stimulus").ignore("key_press").localSave('csv', 'sample-implicit-bias-data.csv');
+        
+        //jsPsych.data.get().ignore("internal_node_id").ignore("stimulus").ignore("key_press").localSave('csv', 'sample-implicit-bias-data.csv');
       }
     }
 
     /* assemble timeline */
 
-    /*timeline.push(instructions_pre_training);
+    timeline.push(instructions_pre_training);
     timeline.push(practice_phase);
     timeline.push(instructions_post_practice);
     timeline.push(training_phase);
-    timeline.push(instructions_pre_test);*/
+    timeline.push(instructions_pre_test);
     timeline.push(test_phase);
     timeline.push(save_data);
     timeline.push(instructions_completed);
