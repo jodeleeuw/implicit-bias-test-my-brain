@@ -9,6 +9,16 @@
 
     /* define task instructions */
 
+    var browser_warning = {
+      type: 'html-button-response',
+      stimulus: '<div class="instructions">'+
+        '<p>To complete this task you will need to use Chrome, Firefox, Edge, or Safari.</p>'+
+        '<p>Internet Explorer is not supported.</p>'+
+        '</div>',
+      choices: ['I am using a supported browser.'],
+      data: {task: 'instructions'}
+    }
+
     var instructions_pre_training = {
       type: 'html-button-response',
       stimulus: '<div class="instructions">'+
@@ -179,9 +189,7 @@
     var test_trial = {
       type: 'html-button-response',
       stimulus: '<p>Which image do you prefer?</p>',
-      choices: function(){
-        var arr = [];
-        
+      choices: function(){        
         num_shapes = jsPsych.randomization.sampleWithReplacement([1,2,3,4], 1)[0];
         color = jsPsych.randomization.sampleWithReplacement(["#ef476f", "#ffd166", "#06d6a0", "#118ab2", "#073b4c"], 1)[0];
         size = jsPsych.randomization.sampleWithReplacement([30,40,50,60], 1)[0];
@@ -252,6 +260,7 @@
 
     /* assemble timeline */
 
+    timeline.push(browser_warning);
     timeline.push(instructions_pre_training);
     timeline.push(practice_phase);
     timeline.push(instructions_post_practice);
